@@ -1,4 +1,3 @@
-"use client";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { FC, useEffect, useRef } from "react";
@@ -10,7 +9,7 @@ var bounds = [
   [1000, 1000],
 ] as [[number, number], [number, number]];
 
-export const Map: FC = () => {
+export const InnerMap: FC = () => {
   const mapContainer = useRef<HTMLDivElement>(null!);
   const map = useRef<L.Map>();
 
