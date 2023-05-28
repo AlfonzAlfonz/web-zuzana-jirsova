@@ -1,9 +1,11 @@
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 import { FC, useEffect, useRef } from "react";
-import { createRoot } from "react-dom/client";
+import { CanvasLayer } from "./CanvasLayer";
+import { ContentLayer } from "./ContentLayer";
+import { GradientLayer } from "./GradientLayer";
 
-const DEFAULT_ZOOM = 3;
+export const DEFAULT_ZOOM = 3;
 var bounds = [
   [0, 0],
   [1000, 1000],
@@ -24,12 +26,18 @@ export const InnerMap: FC = () => {
       zoomControl: false,
       maxBounds: bounds,
       maxBoundsViscosity: 1,
+      inertiaDeceleration: 2000,
+      inertiaMaxSpeed: 800,
+      fadeAnimation: false,
     });
 
     const layer = new GradientLayer("", bounds);
     layer.addTo(map.current);
 
-    const canvas = new CanvasLayer("", bounds);
+    const canvas = new CanvasLayer({
+      pane: "overlayPane",
+      className: "transition-none",
+    });
     canvas.addTo(map.current);
 
     const content = new ContentLayer("", bounds);
@@ -63,122 +71,15 @@ export const InnerMap: FC = () => {
     };
   });
 
-  useEffect(() => {});
-
   return (
     <>
-      <div ref={mapContainer} className="h-[100vh] w-[100vw] bg-primary" />
-      <div></div>
+      <div
+        ref={mapContainer}
+        className="h-[100vh] w-[100vw] bg-primary text-white"
+      />
+      <div className="h-[100vh] w-[100vw] inset-0 pointer-events-none fixed flex justify-center items-center">
+        <div className="bg-white h-[32px] w-[32px]" />
+      </div>
     </>
   );
 };
-
-interface GradientLayer {
-  new (
-    url: string,
-    bounds: [[number, number], [number, number]]
-  ): L.GridLayer & {
-    _image: HTMLElement;
-  };
-}
-
-interface CanvasLayer {
-  new (
-    url: string,
-    bounds: [[number, number], [number, number]]
-  ): L.GridLayer & {
-    _image: HTMLElement;
-    _map: L.Map;
-  };
-}
-
-const SIZE = 1000 * 2 ** DEFAULT_ZOOM;
-const WIDTH = 20 * 2 ** (DEFAULT_ZOOM - 2);
-console.log({ SIZE });
-
-const CanvasLayer: CanvasLayer = L.ImageOverlay.extend({
-  _initImage: function (this: InstanceType<CanvasLayer>) {
-    const canvas = document.createElement("canvas");
-    canvas.width = SIZE;
-    canvas.height = SIZE;
-
-    const ctx = canvas.getContext("2d")!;
-
-    let prevPoint = toXY(this._map.getCenter());
-    this._map.on("move", (e) => {
-      if (!ctx) return;
-      const point = toXY(this._map.getCenter());
-      ctx.fillStyle = "black";
-      ctx.strokeStyle = "black";
-      ctx.lineWidth = WIDTH * 2;
-
-      ctx.beginPath();
-      ctx.arc(point.x, point.y, WIDTH, 0, 2 * Math.PI);
-      ctx.fill();
-
-      ctx.beginPath();
-      ctx.moveTo(prevPoint.x, prevPoint.y);
-      ctx.lineTo(point.x, point.y);
-      ctx.stroke();
-
-      prevPoint = point;
-    });
-
-    this._image = canvas;
-  },
-});
-const toXY = ({ lat, lng }: L.LatLng) => ({
-  x: Math.round(lng * (SIZE / 1000)),
-  y: Math.round(SIZE - lat * (SIZE / 1000)),
-});
-
-const GradientLayer: GradientLayer = L.ImageOverlay.extend({
-  _initImage: function (this: InstanceType<GradientLayer>) {
-    this._image = L.DomUtil.create(
-      "div",
-      "bg-gradient-radial from-white to-90% to-primary"
-    );
-  },
-});
-
-interface ContentLayer {
-  new (
-    url: string,
-    bounds: [[number, number], [number, number]]
-  ): L.GridLayer & {
-    _image: HTMLElement;
-  };
-}
-
-const ContentLayer: ContentLayer = L.ImageOverlay.extend({
-  _initImage: function (this: InstanceType<ContentLayer>) {
-    const root = document.createElement("main");
-    root.classList.add("leaflet-tile-container");
-    root.classList.add("z-[500]");
-
-    createRoot(root).render(
-      <div
-        style={{
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          width: "100%",
-          height: "100%",
-        }}
-      >
-        <div className="h-[100vh] p-4 text-primary">
-          <p></p>
-          <h1 className="text-center">
-            <div>Toto je web portfolio</div>
-            <div className="text-5xl">
-              Zuzany <br />
-              Jirsové
-            </div>
-          </h1>
-        </div>
-      </div>
-    );
-
-    this._image = root;
-  },
-});
