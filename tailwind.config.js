@@ -38,6 +38,15 @@ module.exports = {
           },
         ],
       },
+      animation: {
+        pulseShadow: "pulseShadow 1.5s linear infinite",
+      },
+      keyframes: {
+        pulseShadow: {
+          "0%": { boxShadow: "0 0 5px -10px #721501" },
+          "100%": { boxShadow: "0 0 5px 20px rgba(0, 0, 0, 0)" },
+        },
+      },
     },
   },
   plugins: [],
