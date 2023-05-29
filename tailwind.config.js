@@ -39,12 +39,16 @@ module.exports = {
         ],
       },
       animation: {
-        pulseShadow: "pulseShadow 1.5s linear infinite",
+        pulseShadow: "pulseShadow 2.5s linear infinite",
       },
       keyframes: {
         pulseShadow: {
-          "0%": { boxShadow: "0 0 5px -10px #721501" },
-          "100%": { boxShadow: "0 0 5px 20px rgba(0, 0, 0, 0)" },
+          "0%": {
+            boxShadow: "0 0 10px -5px rgba(227, 200, 194, 1)",
+          },
+          "40%, 100%": {
+            boxShadow: "0 0 10px 40px rgba(0, 0, 0, 0)",
+          },
         },
       },
     },
