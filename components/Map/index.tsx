@@ -9,7 +9,7 @@ export const Map: FC<{ children?: ReactNode }> = ({ children }) => {
     <>
       <ClientMap onCenterClick={() => push("/zuzka")} />
       <div className="h-[100vh] w-[100vw] inset-0 pointer-events-none fixed flex justify-center items-center z-[1000] pointer">
-        <div className="bg-primary h-[96px] w-[96px] rounded-full" />
+        <div className="bg-primary h-[110px] w-[110px] rounded-full" />
       </div>
       {children}
     </>

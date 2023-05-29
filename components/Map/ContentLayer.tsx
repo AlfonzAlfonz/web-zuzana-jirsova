@@ -25,7 +25,7 @@ export const ContentLayer: ContentLayer = L.ImageOverlay.extend({
           <Hero />
         </div>
         <div className="h-full w-full inset-0 pointer-events-none flex justify-center items-center z-[1000] pointer">
-          <div className="bg-primary h-[96px] w-[96px] rounded-full pointer-events-auto" />
+          <div className="bg-primary h-[110px] w-[110px] rounded-full pointer-events-auto" />
         </div>
       </>
     );

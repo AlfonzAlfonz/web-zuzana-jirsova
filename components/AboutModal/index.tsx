@@ -1,5 +1,5 @@
 "use client";
-import { MotionConfig, motion } from "framer-motion";
+import { motion } from "framer-motion";
 import { FC } from "react";
 import { Hero } from "../Hero";
 import { useRouter } from "next/navigation";
@@ -15,7 +15,7 @@ export const AboutModal: FC = () => {
       >
         <div className="absolute inset-0 flex justify-center items-center">
           <div
-            className="bg-offwhite h-[96px] w-[96px] rounded-full z-[1000]"
+            className="bg-offwhite h-[110px] w-[110x] rounded-full z-[1000]"
             onClick={() => push("/")}
           />
         </div>

@@ -1,3 +1,4 @@
+import { WIDTH } from "@/constants";
 import L from "leaflet";
 
 interface CanvasLayer {
@@ -10,7 +11,6 @@ interface CanvasLayer {
   };
 }
 
-const WIDTH = 48;
 const PRIMARY = "#FF2E00";
 
 type TileHandler = {
