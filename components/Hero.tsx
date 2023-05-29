@@ -4,7 +4,10 @@ export const Hero: FC = () => {
   return (
     <div className="h-[100vh] p-4">
       <h1 className="text-center">
-        <div className="font-[300] text-[20px] leading-[57.6px] mb-[-16px]">
+        <div
+          className="font-[400] text-[20px] leading-[57.6px] mb-[-16px]"
+          style={{ letterSpacing: ".5px" }}
+        >
           Toto je web portfolio
         </div>
         <div
