@@ -10,7 +10,7 @@ interface CanvasLayer {
   };
 }
 
-const WIDTH = 32;
+const WIDTH = 48;
 const PRIMARY = "#FF2E00";
 
 type TileHandler = {
@@ -30,13 +30,16 @@ export const CanvasLayer: CanvasLayer = L.GridLayer.extend({
   createTile: function (this: InstanceType<CanvasLayer>, coords: L.Coords) {
     const canvas = document.createElement("canvas");
     const tileSize = this.getTileSize();
-    canvas.width = tileSize.x;
-    canvas.height = tileSize.y;
+
+    const dpr = window.devicePixelRatio;
+
+    canvas.width = tileSize.x * dpr;
+    canvas.height = tileSize.y * dpr;
 
     const ctx = canvas.getContext("2d")!;
     ctx.fillStyle = PRIMARY;
     ctx.strokeStyle = PRIMARY;
-    ctx.lineWidth = WIDTH * 2;
+    ctx.lineWidth = WIDTH * 2 * dpr;
 
     const absoluteCoords = {
       x: (coords.x * 2 ** 13) / tileSize.x,
@@ -53,12 +56,15 @@ export const CanvasLayer: CanvasLayer = L.GridLayer.extend({
       const dx = Math.abs(center.x - 1000 / 64 - absoluteCoords.x);
       if (dy < 1000 / 32 && dx < 1000 / 32) {
         const point = {
-          x: (center.x - absoluteCoords.x) * (1000 / 125),
-          y: -(center.y - -(coords.y * 2 ** 13) / tileSize.y) * (1000 / 125),
+          x: (center.x - absoluteCoords.x) * (1000 / 125) * dpr,
+          y:
+            -(center.y - -(coords.y * 2 ** 13) / tileSize.y) *
+            (1000 / 125) *
+            dpr,
         };
 
         ctx.beginPath();
-        ctx.arc(point.x, point.y, WIDTH, 0, 2 * Math.PI);
+        ctx.arc(point.x, point.y, WIDTH * dpr, 0, 2 * Math.PI);
         ctx.fill();
 
         if (prevPoint) {

@@ -2,6 +2,16 @@
 @tailwind components;
 @tailwind utilities;
 
+@font-face {
+  font-family: "Ortica";
+  src: url("fonts/Ortica-Light.woff") format("woff");
+}
+
+@font-face {
+  font-family: "Glyph World";
+  font-synthesis: weight;
+  src: url("fonts/GlyphWorld-Glacier.woff") format("woff");
+}
 .leaflet-container {
   background: black !important;
 }

@@ -5,15 +5,19 @@ import { CanvasLayer } from "./CanvasLayer";
 import { ContentLayer } from "./ContentLayer";
 import { GradientLayer } from "./GradientLayer";
 
-export const DEFAULT_ZOOM = 3;
-var bounds = [
-  [0, 0],
-  [1000, 1000],
-] as [[number, number], [number, number]];
+interface Props {
+  onCenterClick: () => unknown;
+}
 
-export const InnerMap: FC = () => {
+export const InnerMap: FC<Props> = ({ onCenterClick }) => {
   const mapContainer = useRef<HTMLDivElement>(null!);
   const map = useRef<L.Map>();
+
+  const centerClickRef = useRef(onCenterClick);
+
+  useEffect(() => {
+    centerClickRef.current = onCenterClick;
+  });
 
   useEffect(() => {
     map.current = L.map(mapContainer.current!, {
@@ -29,10 +33,17 @@ export const InnerMap: FC = () => {
       inertiaDeceleration: 2000,
       inertiaMaxSpeed: 800,
       fadeAnimation: false,
+      doubleClickZoom: false,
     });
 
-    const layer = new GradientLayer("", bounds);
-    layer.addTo(map.current);
+    map.current.on("click", (e) => {
+      if (map.current!.distance(e.latlng, map.current!.getCenter()) < 6) {
+        centerClickRef.current();
+      }
+    });
+
+    const gradient = new GradientLayer("", bounds);
+    gradient.addTo(map.current);
 
     const canvas = new CanvasLayer({
       pane: "overlayPane",
@@ -69,17 +80,18 @@ export const InnerMap: FC = () => {
     return () => {
       map.current?.remove();
     };
-  });
+  }, []);
 
   return (
-    <>
-      <div
-        ref={mapContainer}
-        className="h-[100vh] w-[100vw] bg-primary text-white"
-      />
-      <div className="h-[100vh] w-[100vw] inset-0 pointer-events-none fixed flex justify-center items-center">
-        <div className="bg-white h-[32px] w-[32px]" />
-      </div>
-    </>
+    <div
+      ref={mapContainer}
+      className="h-[100vh] w-[100vw] bg-primary text-white"
+    />
   );
 };
+
+export const DEFAULT_ZOOM = 3;
+var bounds = [
+  [0, 0],
+  [1000, 1000],
+] as [[number, number], [number, number]];
