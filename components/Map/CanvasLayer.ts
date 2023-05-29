@@ -52,32 +52,30 @@ export const CanvasLayer: CanvasLayer = L.GridLayer.extend({
       const { lat: y, lng: x } = this._map.getCenter();
       const center = { x, y };
 
-      const dy = Math.abs(center.y - 1000 / 64 - absoluteCoords.y);
-      const dx = Math.abs(center.x - 1000 / 64 - absoluteCoords.x);
-      if (dy < 1000 / 32 && dx < 1000 / 32) {
-        const point = {
-          x: (center.x - absoluteCoords.x) * (1000 / 125) * dpr,
-          y:
-            -(center.y - -(coords.y * 2 ** 13) / tileSize.y) *
-            (1000 / 125) *
-            dpr,
-        };
+      // const dy = Math.abs(center.y - 1000 / 64 - absoluteCoords.y);
+      // const dx = Math.abs(center.x - 1000 / 64 - absoluteCoords.x);
+      // if (dy < 1000 / 32 && dx < 1000 / 32) {
+      const point = {
+        x: (center.x - absoluteCoords.x) * (1000 / 125) * dpr,
+        y:
+          -(center.y - -(coords.y * 2 ** 13) / tileSize.y) * (1000 / 125) * dpr,
+      };
 
+      ctx.beginPath();
+      ctx.arc(point.x, point.y, WIDTH * dpr, 0, 2 * Math.PI);
+      ctx.fill();
+
+      if (prevPoint) {
         ctx.beginPath();
-        ctx.arc(point.x, point.y, WIDTH * dpr, 0, 2 * Math.PI);
-        ctx.fill();
-
-        if (prevPoint) {
-          ctx.beginPath();
-          ctx.moveTo(prevPoint.x, prevPoint.y);
-          ctx.lineTo(point.x, point.y);
-          ctx.stroke();
-        }
-
-        prevPoint = point;
-      } else {
-        prevPoint = undefined;
+        ctx.moveTo(prevPoint.x, prevPoint.y);
+        ctx.lineTo(point.x, point.y);
+        ctx.stroke();
       }
+
+      prevPoint = point;
+      // } else {
+      //   prevPoint = undefined;
+      // }
     };
 
     this._map.on("move", h);
