@@ -11,7 +11,7 @@ interface CanvasLayer {
   };
 }
 
-const PRIMARY = "#FF2E00";
+const PRIMARY = "rgb(226, 117, 88)";
 
 type TileHandler = {
   unload: () => {};

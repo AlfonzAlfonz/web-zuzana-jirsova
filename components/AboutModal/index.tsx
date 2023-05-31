@@ -15,7 +15,7 @@ export const AboutModal: FC = () => {
       >
         <div className="absolute inset-0 flex justify-center items-center">
           <div
-            className="bg-offwhite h-[110px] w-[110x] rounded-full z-[1000]"
+            className="bg-offwhite h-[110px] w-[110px] rounded-full z-[1000]"
             onClick={() => push("/")}
           />
         </div>
